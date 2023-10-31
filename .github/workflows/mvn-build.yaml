@@ -49,7 +49,7 @@ jobs:
               echo "${{ secrets.jibolakp }}" >> key.pem
               sudo chmod 400 key.pem
           - name: push to tomcat server
-            run: scp -i key.pem target/*.war ${{secrets.tomcat_server}}:/opt/tomcat9/webapps
+            run: scp -i key.pem target/*war ec2-user@100.26.188.99:/opt/tomcat9/webapps
 
 
 
