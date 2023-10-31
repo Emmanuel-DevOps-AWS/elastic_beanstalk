@@ -47,12 +47,12 @@ jobs:
               path: ~/
           - name: tomcat aspect
             run: |
-              echo ${{ secrets.JIBOLAKP }} > ~/key.pem
+              echo ${{ secrets.TOMCAT_KP }} > ~/key.pem
               chmod 400 ~/key.pem
-          - name: see
+          - name: see key in home directory
             run: ls -l ~/
           - name: push to tomcat server
-            run: sudo scp -i ~/key.pem ~/*.war ec2-user@100.26.188.99:/opt/tomcat9/webapps
+            run: scp -i ~/key.pem ~/*.war ec2-user@54.242.145.113:/opt/tomcat9/webapps
 
 
 
