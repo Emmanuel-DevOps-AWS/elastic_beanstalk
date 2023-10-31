@@ -50,8 +50,8 @@ jobs:
               echo "${{ secrets.JIBOLAKP }}" >> /home/runner/key.pem
               chmod 400 /home/runner/key.pem
               echo /home/runner/key.pem
-          # - name: push to tomcat server
-          #   run: scp -i ~/key.pem /home/runner/webapp ${{ secrets.TOMCAT_SERVER }}:/opt/tomcat9/webapps
+          - name: push to tomcat server
+            run: scp -i /home/runner/key.pem /home/runner/webapp ${{ secrets.TOMCAT_SERVER }}:/opt/tomcat9/webapps
 
 
 
