@@ -6,7 +6,7 @@ on:
         - main
     workflow_dispatch:    
  ### the above trigger causes the workflow to be triggered when code is poushed to main. 
-#
+
 jobs:
 
     Build-test-deploy: ### this specifies the job name 
