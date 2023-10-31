@@ -45,15 +45,9 @@ jobs:
             with:
               name: webapp
               path: ~/
-          - name: Set up Environment Variables
-            run: |
-              echo "SONARQUBE_USERNAME=${{ secrets.SONARQUBE_USERNAME }}" >> $GITHUB_ENV
-              echo "SONARQUBE_PASSWORD=${{ secrets.SONARQUBE_PASSWORD }}" >> $GITHUB_ENV
           - name: Run SonarQube Analysis
             run: |
               mvn sonar:sonar \
-                -Dsonar.login=$SONARQUBE_USERNAME \
-                -Dsonar.password=$SONARQUBE_PASSWORD \
                 -Dsonar.host.url=http://54.211.193.235:9000
           # - name: tomcat aspect 
           #   run: |
