@@ -52,7 +52,7 @@ jobs:
           - name: see key in home directory
             run: ls -l ~/
           - name: push to tomcat server
-            run: sudo scp -i ~/key.pem ~/*.war ec2-user@54.242.145.113:/opt/tomcat9/webapps
+            run: sudo scp -i ~/key.pem -o StrictHostKeyChecking=no ~/*.war ec2-user@54.242.145.113:/opt/tomcat9/webapps
 
 
 
