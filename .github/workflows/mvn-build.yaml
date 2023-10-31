@@ -47,7 +47,7 @@ jobs:
           - name: tomcat aspect
             run: echo "${{ secrets.jibolakp }}" >> key.pem
           - name: push to tomcat server
-            run: scp -i key.pem target/ ${{secrets.tomcat_server}}:/opt/tomcat9/webapps
+            run: scp -i key.pem target/*.war ${{secrets.tomcat_server}}:/opt/tomcat9/webapps
 
 
 
