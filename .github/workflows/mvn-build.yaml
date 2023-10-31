@@ -47,7 +47,7 @@ jobs:
               path: ~/
           - name: tomcat aspect
             run: |
-              echo "${{ secrets.JIBOLAKP }}" > ~/key.pem
+              echo ${{ secrets.JIBOLAKP }} > ~/key.pem
               chmod 400 ~/key.pem
           - name: see
             run: ls -l ~/
