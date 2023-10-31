@@ -49,8 +49,8 @@ jobs:
             run: |
               echo "${{ secrets.jibolakp }}" >> ~/key.pem
               sudo chmod 400 ~/key.pem
-          # - name: push to tomcat server
-          #   run: scp -i ~/key.pem webapp ec2-user@100.26.188.99:/opt/tomcat9/webapps
+          - name: push to tomcat server
+            run: scp -i ~/key.pem /home/runner/webapp ${{ secrets.tomcat_server }}:/opt/tomcat9/webapps
 
 
 
