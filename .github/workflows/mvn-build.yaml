@@ -1,0 +1,31 @@
+name: build java project with maven 
+
+on: 
+    push:
+      branches:
+        - main
+    workflow_dispatch:    
+ ### the above trigger causes the workflow to be triggered when code is poushed to main. 
+
+jobs:
+
+    Build-test-deploy: ### this specifies the job name 
+        runs-on: ubuntu-latest ### this specifies where the job should run
+        steps:
+            - name: clone repository
+              uses: actions/checkout@v3  ### the first step clones our repo into the runner. 
+
+            - name: install and setup java with maven 
+              uses: actions/setup-java@v3
+              with:
+                distribution: 'adopt'
+                java-version: '11' 
+            - name: code build with maven 
+              run:  mvn package   
+
+
+           
+     
+
+    
+    
