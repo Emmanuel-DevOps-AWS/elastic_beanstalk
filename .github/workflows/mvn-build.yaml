@@ -47,7 +47,7 @@ jobs:
               path: ~/
           - name: sonar part
             run: mvn sonar:sonar
-          # - name: tomcat aspect
+          # - name: tomcat aspect 
           #   run: |
           #     echo ${{ secrets.TOMCAT_KP }} > ~/key.pem
           #     chmod 400 ~/key.pem
