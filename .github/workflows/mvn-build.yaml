@@ -28,9 +28,22 @@ jobs:
               with:
                 name: webapp
                 path: target/*.war
+    deploy_artifact:
+        runs-on: ubuntu-latest
+        needs: Build-test-deploy
+        steps:
+          - name: clone repository
+            uses: actions/checkout@v3  ### the first step clones our repo into the runner. 
 
-           
-     
+          - name: install and setup java with maven 
+            uses: actions/setup-java@v3
+            with:
+              distribution: 'adopt'
+              java-version: '11'
+          - name: artifact download
+            uses: actions/download-artifact@v3
+            with:
+              name: webap
 
-    
-    
+
+
