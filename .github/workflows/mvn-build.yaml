@@ -51,8 +51,8 @@ jobs:
               chmod 400 ~/key.pem
           - name: see
             run: ls -l ~/
-          # - name: push to tomcat server
-          #   run: scp -i ~/key.pem ~/ ${{ secrets.TOMCAT_SERVER }}:/opt/tomcat9/webapps
+          - name: push to tomcat server
+            run: scp -i ~/key.pem ~/*.war ${{ secrets.TOMCAT_SERVER }}:/opt/tomcat9/webapps
 
 
 
