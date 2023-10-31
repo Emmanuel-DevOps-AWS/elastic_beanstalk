@@ -23,6 +23,11 @@ jobs:
             - name: code build with maven 
               run:  mvn package   
 
+            - name: upload mvn artifact
+              uses: actions/upload-artifact@v3
+              with:
+                name: webapp
+                path: target/*.war
 
            
      
