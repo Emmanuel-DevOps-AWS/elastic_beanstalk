@@ -43,7 +43,7 @@
             - name: artifact download
               uses: actions/download-artifact@v3
               with: 
-                name: xashy-app
+                name: xashy_app
                 path: ~/
 
             - name: key upload
