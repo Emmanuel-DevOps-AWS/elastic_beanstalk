@@ -37,7 +37,7 @@ out.println("Server Host Name :: "+inetAddress.getHostName());
                 Xashy Tech, 
 		Maryland, USA
 		+1 202 367 6985,
-		info@xashyinc.com.com
+		info@xashyinc.com
 		<br>
 		<a href="mailto:info@xashyinc.com">Mail to Xashy Tech</a>
 	</span>
