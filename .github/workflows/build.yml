@@ -10,6 +10,7 @@ jobs:
     build-test-deploy:
         runs-on: ubuntu-latest
         permissions: 
+          ## for github actions to be able to write packages to github packages
           contents: read
           packages: write
         steps:
