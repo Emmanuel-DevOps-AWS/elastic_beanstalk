@@ -52,4 +52,4 @@ jobs:
                   --description "commit-sha-${{ github.sha }}"
 
             - name: deploy to elastic beanstalk
-              run: aws elasticbeanstalk update-environment --environment-name Diddy-test-dev --version-label "ver-${{ github.sha }}" --version-label "ver-${{ github.sha }}"
+              run: aws elasticbeanstalk update-environment --environment-name Diddy-test-env --version-label "ver-${{ github.sha }}" --version-label "ver-${{ github.sha }}"
