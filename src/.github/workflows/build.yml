@@ -1,0 +1,27 @@
+name: Build-Deploy-To-ELB
+
+on:
+    push:
+        branches:
+            - main
+    workflow_dispatch:
+
+jobs:
+    build-test-deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - name: clone repositoy 
+              uses: actions/checkout@v2
+            - name: install java amd setup maven
+              uses: actions/setup-java@v3
+              with:
+                distribution: 'adopt'
+                java-version: '11'
+            - name: sonarqube analysis
+              run: mvn sonar:sonar -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY}} -Dsonar.host.url=${{ secrets.SONAR_HOST_URL}} -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+            - name: maven build
+              run: mvn clean package
+            - name: upload to artifact repostory
+              run: mvn --batch-mode deploy
+              env:
+                GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
