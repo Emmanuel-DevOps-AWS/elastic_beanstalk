@@ -1,56 +1,48 @@
-name: Build-Deploy-To-ELB
+name: Elastic Beanstalk Deployment Workflow
 
 on:
-    push:
-        branches:
-            - main
-    workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
-    build-test-deploy:
-        runs-on: ubuntu-latest
-        permissions: 
-          ## for github actions to be able to write packages to github packages
-          contents: read
-          packages: write
-        steps:
-            - name: clone repositoy 
-              uses: actions/checkout@v2
+  qa_deployment:
+    name: Deploy to QA
+    runs-on: ubuntu-latest
 
-            - name: install java amd setup maven
-              uses: actions/setup-java@v3
-              with:
-                distribution: 'adopt'
-                java-version: '11'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-            - name: sonarqube analysis
-              run: mvn sonar:sonar -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY}} -Dsonar.host.url=${{ secrets.SONAR_HOST_URL}} -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+      - name: Deploy to QA
+        run: |
+          # Add your Elastic Beanstalk deployment commands for QA here
+          # Example: eb deploy -e YourQAEnvironment
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_QA }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_QA }}
 
-            - name: maven build
-              run: mvn clean package
+  prod_deployment:
+    name: Deploy to Prod
+    runs-on: ubuntu-latest
+    needs: qa_deployment
 
-            - name: upload to artifact repostory
-              run: mvn --batch-mode deploy
-              env:
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-            - name: authenticate into aws
-              uses: aws-actions/configure-aws-credentials@v1
-              with:
-                aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-                aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
-                aws-region: ${{ secrets.AWS_REGION }}
-                
-            - name: copy artifact into s3
-              run: aws s3 cp target/*war s3://s3buck-for-diddy
+      - name: Request Manual Approval (QA to Prod)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: echo "Please approve the deployment from QA to Prod"
+        env:
+          PR_TITLE: "Manual Approval for Deployment"
+        id: approval
 
-            - name: create application version
-              run: |
-                aws elasticbeanstalk create-application-version \
-                  --application-name diddy-qa \
-                  --source-bundle S3Bucket="s3buck-for-diddy",S3Key="xashy-webapp.war" \
-                  --version-label "ver-${{ github.sha }}" \
-                  --description "commit-sha-${{ github.sha }}"
-
-            - name: deploy to elastic beanstalk
-              run: aws elasticbeanstalk update-environment --environment-name Diddy-qa-env-2 --version-label "ver-${{ github.sha }}" --version-label "ver-${{ github.sha }}"
+      - name: Deploy to Prod
+        if: steps.approval.outputs['PR_TITLE'] && github.event_name == 'push' && github.ref == 'refs/heads/main' && github.event.action == 'closed'
+        run: |
+          # Add your Elastic Beanstalk deployment commands for Prod here
+          # Example: eb deploy -e YourProdEnvironment
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_PROD }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}
