@@ -77,7 +77,8 @@ jobs:
           aws elasticbeanstalk create-application-version \
             --application-name build-app \
             --source-bundle S3Bucket="s3buck-for-diddy",S3Key="xashy-webapp.war" \
-            --description "commit-sha-${{ github.sha }}"
+            --version-label "prod-ver-${{ github.sha }}" \
+            --description "prod-commit-sha-${{ github.sha }}"
 
       - name: deploy to elastic beanstalk
         run: aws elasticbeanstalk update-environment --environment-name build-app-prod --version-label "ver-${{ github.sha }}" --version-label "ver-${{ github.sha }}"
