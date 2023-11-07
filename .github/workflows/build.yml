@@ -28,6 +28,7 @@ jobs:
   prod_deployment:
     name: Deploy to Prod
     environment: Prod
+    needs: qa_deployment
     runs-on: ubuntu-latest
 
     steps:
