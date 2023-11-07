@@ -8,6 +8,7 @@ on:
 jobs:
   qa_deployment:
     name: Deploy to QA
+    environment: QA
     runs-on: ubuntu-latest
 
     steps:
@@ -22,11 +23,11 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_QA }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_QA }}
 
-    environment:
-      name: QA
+
 
   prod_deployment:
     name: Deploy to Prod
+    environment: Prod
     runs-on: ubuntu-latest
 
     steps:
@@ -37,5 +38,4 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: echo "Please approve the deployment from QA to Prod"
 
-    environment:
-      name: Prod
+    
