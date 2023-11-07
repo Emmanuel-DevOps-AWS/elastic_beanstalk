@@ -9,6 +9,9 @@ jobs:
   qa_deployment:
     name: Deploy to QA
     environment: QA
+    permissions:
+      contents: read
+      packages: write
     runs-on: ubuntu-latest
 
     steps:
