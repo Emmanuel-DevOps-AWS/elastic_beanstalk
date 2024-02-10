@@ -6,9 +6,8 @@ on:
       - main
 
 jobs:
-  qa_deployment:
+  Elastic_BeanStalk_deployment:
     name: Deploy to QA
-    environment: QA
     permissions:
       contents: read
       packages: write
@@ -25,7 +24,11 @@ jobs:
           java-version: '11'
 
       - name: sonarqube analysis
-        run: mvn sonar:sonar -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY}} -Dsonar.host.url=${{ secrets.SONAR_HOST_URL}} -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+        run: |
+          mvn sonar:sonar \
+          -Dsonar.projectKey=${{ secrets.PROJECT_KEY }} \
+          -Dsonar.host.url=${{ secrets.HOST_URL }} \
+          -Dsonar.login=${{ secrets.SECURE_TOKEN }}
 
       - name: maven build
         run: mvn clean package
@@ -38,50 +41,20 @@ jobs:
       - name: authenticate into aws
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-access-key-id: ${{ secrets.ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.SECRET_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
           
       - name: copy artifact into s3
-        run: aws s3 cp target/*war s3://s3buck-for-diddy
+        run: aws s3 cp target/*war s3://fridayhandsonbucket223
 
       - name: create application version
         run: |
           aws elasticbeanstalk create-application-version \
-            --application-name build-app \
-            --source-bundle S3Bucket="s3buck-for-diddy",S3Key="xashy-webapp.war" \
+            --application-name friday_handson \
+            --source-bundle S3Bucket="fridayhandsonbucket223",S3Key="xashy-webapp.war" \
             --version-label "ver-${{ github.sha }}" \
             --description "commit-sha-${{ github.sha }}"
 
       - name: deploy to elastic beanstalk
-        run: aws elasticbeanstalk update-environment --environment-name build-app-env --version-label "ver-${{ github.sha }}" --version-label "ver-${{ github.sha }}"
-
-
-
-  prod_deployment:
-    name: Deploy to Prod
-    environment: Prod
-    needs: qa_deployment
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: authenticate into aws
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: create application version
-        run: |
-          aws elasticbeanstalk create-application-version \
-            --application-name build-app \
-            --source-bundle S3Bucket="s3buck-for-diddy",S3Key="xashy-webapp.war" \
-            --version-label "prod-ver-${{ github.sha }}" \
-            --description "prod-commit-sha-${{ github.sha }}"
-
-      - name: deploy to elastic beanstalk
-        run: aws elasticbeanstalk update-environment --environment-name build-app-prod --version-label "ver-${{ github.sha }}" --version-label "ver-${{ github.sha }}"
-
-
-    
+        run: aws elasticbeanstalk update-environment --environment-name Fridayhandson-env --version-label "ver-${{ github.sha }}" --version-label "ver-${{ github.sha }}"
